@@ -1,0 +1,240 @@
+{
+  "name": "Example Synthesizer",
+  "manufacturer": "Example Corp",
+  "version": "1.0",
+  "midiChannel": 1,
+  "tabs": [
+    {
+      "id": "oscillator",
+      "name": "Oscillator",
+      "sections": [
+        {
+          "id": "osc1",
+          "name": "Oscillator 1",
+          "controls": [
+            {
+              "id": "osc1_waveform",
+              "name": "Waveform",
+              "type": "select",
+              "options": ["Sine", "Square", "Sawtooth", "Triangle"],
+              "default": "Sawtooth",
+              "midi": {
+                "type": "cc",
+                "number": 20
+              }
+            },
+            {
+              "id": "osc1_frequency",
+              "name": "Frequency",
+              "type": "knob",
+              "min": 20,
+              "max": 20000,
+              "default": 440,
+              "unit": "Hz",
+              "midi": {
+                "type": "cc",
+                "number": 21
+              }
+            },
+            {
+              "id": "osc1_level",
+              "name": "Level",
+              "type": "slider",
+              "min": 0,
+              "max": 127,
+              "default": 100,
+              "midi": {
+                "type": "cc",
+                "number": 22
+              }
+            }
+          ]
+        },
+        {
+          "id": "osc2",
+          "name": "Oscillator 2",
+          "controls": [
+            {
+              "id": "osc2_waveform",
+              "name": "Waveform",
+              "type": "select",
+              "options": ["Sine", "Square", "Sawtooth", "Triangle"],
+              "default": "Square",
+              "midi": {
+                "type": "cc",
+                "number": 23
+              }
+            },
+            {
+              "id": "osc2_detune",
+              "name": "Detune",
+              "type": "knob",
+              "min": -50,
+              "max": 50,
+              "default": 0,
+              "unit": "cents",
+              "midi": {
+                "type": "cc",
+                "number": 24
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "filter",
+      "name": "Filter",
+      "sections": [
+        {
+          "id": "lpf",
+          "name": "Low Pass Filter",
+          "controls": [
+            {
+              "id": "lpf_cutoff",
+              "name": "Cutoff",
+              "type": "knob",
+              "min": 20,
+              "max": 20000,
+              "default": 1000,
+              "unit": "Hz",
+              "midi": {
+                "type": "cc",
+                "number": 30
+              }
+            },
+            {
+              "id": "lpf_resonance",
+              "name": "Resonance",
+              "type": "knob",
+              "min": 0,
+              "max": 100,
+              "default": 10,
+              "unit": "%",
+              "midi": {
+                "type": "cc",
+                "number": 31
+              }
+            },
+            {
+              "id": "lpf_envelope_amount",
+              "name": "Envelope Amount",
+              "type": "slider",
+              "min": -127,
+              "max": 127,
+              "default": 50,
+              "midi": {
+                "type": "cc",
+                "number": 32
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "envelope",
+      "name": "Envelope",
+      "sections": [
+        {
+          "id": "adsr",
+          "name": "ADSR Envelope",
+          "controls": [
+            {
+              "id": "env_attack",
+              "name": "Attack",
+              "type": "slider",
+              "min": 0,
+              "max": 10000,
+              "default": 100,
+              "unit": "ms",
+              "midi": {
+                "type": "cc",
+                "number": 40
+              }
+            },
+            {
+              "id": "env_decay",
+              "name": "Decay",
+              "type": "slider",
+              "min": 0,
+              "max": 10000,
+              "default": 500,
+              "unit": "ms",
+              "midi": {
+                "type": "cc",
+                "number": 41
+              }
+            },
+            {
+              "id": "env_sustain",
+              "name": "Sustain",
+              "type": "slider",
+              "min": 0,
+              "max": 127,
+              "default": 80,
+              "midi": {
+                "type": "cc",
+                "number": 42
+              }
+            },
+            {
+              "id": "env_release",
+              "name": "Release",
+              "type": "slider",
+              "min": 0,
+              "max": 10000,
+              "default": 1000,
+              "unit": "ms",
+              "midi": {
+                "type": "cc",
+                "number": 43
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "advanced",
+      "name": "Advanced",
+      "sections": [
+        {
+          "id": "nrpn_controls",
+          "name": "NRPN Controls",
+          "controls": [
+            {
+              "id": "mod_wheel_assign",
+              "name": "Mod Wheel Assignment",
+              "type": "select",
+              "options": ["Off", "LFO Amount", "Filter Cutoff", "Pitch Bend"],
+              "default": "LFO Amount",
+              "midi": {
+                "type": "nrpn",
+                "msb": 1,
+                "lsb": 10
+              }
+            }
+          ]
+        },
+        {
+          "id": "sysex_controls",
+          "name": "SysEx Controls",
+          "controls": [
+            {
+              "id": "patch_name",
+              "name": "Patch Name",
+              "type": "text",
+              "maxLength": 16,
+              "default": "Init Patch",
+              "midi": {
+                "type": "sysex",
+                "template": "F0 43 10 00 01 {data} F7"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
