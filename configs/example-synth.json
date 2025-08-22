@@ -190,6 +190,17 @@
                 "type": "cc",
                 "number": 43
               }
+            },
+            {
+              "id": "env_display",
+              "name": "Envelope Shape",
+              "type": "adsr_display",
+              "parameters": {
+                "attack": "env_attack",
+                "decay": "env_decay",
+                "sustain": "env_sustain",
+                "release": "env_release"
+              }
             }
           ]
         }

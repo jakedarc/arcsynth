@@ -3547,7 +3547,15 @@
               "id": "amp_display",
               "name": "Envelope Shape",
               "type": "adsr_display",
-              "sectionId": "amp"
+              "parameters": {
+                "delay": "amp_delay",
+                "attack": "amp_attack",
+                "hold": "amp_hold_time",
+                "decay": "amp_decay",
+                "sustain": "amp_sustain",
+                "release": "amp_release",
+                "loop": "amp_loop"
+              }
             }
           ],
           "subsections": [
@@ -4016,7 +4024,15 @@
               "id": "mod1_display",
               "name": "Envelope Shape",
               "type": "adsr_display",
-              "sectionId": "mod1"
+              "parameters": {
+                "delay": "mod1_delay",
+                "attack": "mod1_attack",
+                "hold": "mod1_hold_time",
+                "decay": "mod1_decay",
+                "sustain": "mod1_sustain",
+                "release": "mod1_release",
+                "loop": "mod1_loop"
+              }
             }
           ],
           "subsections": [
@@ -4485,7 +4501,15 @@
               "id": "mod2_display",
               "name": "Envelope Shape",
               "type": "adsr_display",
-              "sectionId": "mod2"
+              "parameters": {
+                "delay": "mod2_delay",
+                "attack": "mod2_attack",
+                "hold": "mod2_hold_time",
+                "decay": "mod2_decay",
+                "sustain": "mod2_sustain",
+                "release": "mod2_release",
+                "loop": "mod2_loop"
+              }
             }
           ],
           "subsections": [
