@@ -3165,7 +3165,7 @@
               "id": "filter_amp_env_depth",
               "name": "Amp Env->Env Depth",
               "type": "knob",
-              "min": -63,
+              "min": -64,
               "max": 63,
               "default": 0,
               "midi": {
@@ -3185,7 +3185,7 @@
               "id": "filter_mod_env1_depth",
               "name": "Mod Env 1->Env Depth",
               "type": "knob",
-              "min": -63,
+              "min": -64,
               "max": 63,
               "default": 0,
               "midi": {
@@ -3289,12 +3289,14 @@
               "options": [
                 "Low Pass",
                 "Band Pass",
-                "High Pass"
+                "High Pass",
+                "Dual"
               ],
               "midiValues": [
                 0,
                 1,
-                2
+                2,
+                3
               ],
               "default": "Low Pass",
               "midi": {
