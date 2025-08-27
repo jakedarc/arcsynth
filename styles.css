@@ -1,24 +1,49 @@
 /* Global Styles */
 
 :root {
+    /* Theme Colors - Primary Palette */
     --color-primary: #4a90e2;
     --color-primary-hover: #357abd;
+    --color-button-primary: #4a90e2;
     --color-secondary: #6c757d;
     --color-secondary-hover: #5a6268;
     --color-success: #28a745;
     --color-success-hover: #218838;
     --color-danger: #e74c3c;
+    --color-warning: #f39c12;
+    --color-warning-hover: #e67e22;
+    
+    /* Background Colors */
     --bg-primary: #1a1a1a;
     --bg-secondary: #2a2a2a;
     --bg-tertiary: #3a3a3a;
+    --bg-input: #444;
+    --bg-hover: #555;
+    --bg-disabled: #666;
+    
+    /* Border Colors */
     --border-color: #3a3a3a;
     --border-color-light: #4a4a4a;
+    
+    /* Text Colors */
     --text-primary: #fff;
     --text-secondary: #ccc;
     --text-muted: #888;
-    --scrollbar-track: #2a2a2a;
-    --scrollbar-thumb: #4a4a4a;
-    --scrollbar-thumb-hover: #5a5a5a;
+    
+    /* Scrollbar Colors */
+    --scrollbar-track: var(--bg-secondary);
+    --scrollbar-thumb: var(--border-color-light);
+    
+    /* Special Colors */
+    --notification-success-border: #27ae60;
+    --midi-incoming: #51cf66;
+    
+    /* Alpha Utilities */
+    --alpha-subtle: 0.1;
+    --alpha-focus: 0.2;
+    --alpha-glow: 0.3;
+    --alpha-modal: 0.5;
+    --alpha-overlay: 0.8;
     --spacing-xs: 0.25rem;
     --spacing-sm: 0.5rem;
     --spacing-md: 1rem;
@@ -70,7 +95,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--scrollbar-thumb-hover);
+    background: var(--bg-hover);
 }
 
 ::-webkit-scrollbar-corner {
@@ -105,6 +130,72 @@ body {
     gap: 1rem;
 }
 
+/* Menu System */
+.menu-container {
+    position: relative;
+    display: inline-block;
+}
+
+.menu-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 30%);
+    min-width: 180px;
+    z-index: 1000;
+    padding: 0.5rem 0;
+    margin-top: 0.25rem;
+}
+
+.menu-dropdown.hidden {
+    display: none;
+}
+
+.menu-item {
+    display: block;
+    width: 100%;
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    padding: 0.5rem 1rem;
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease;
+}
+
+.menu-item:hover {
+    background: var(--bg-hover);
+}
+
+.menu-separator {
+    height: 1px;
+    background: var(--border-color);
+    margin: 0.5rem 0;
+}
+
+/* MIDI Status */
+.midi-status-text {
+    transition: color 0.2s ease, cursor 0.2s ease;
+}
+
+.midi-status-text.disconnected {
+    color: var(--color-warning);
+    cursor: pointer;
+}
+
+.midi-status-text.disconnected:hover {
+    color: var(--color-warning-hover);
+}
+
+.midi-status-text.connected {
+    color: #fff;
+    cursor: default;
+}
+
 .main-content {
     display: flex;
     flex: 1;
@@ -122,6 +213,7 @@ body {
     flex: 1;
     overflow-y: auto;
     padding: var(--spacing-xl);
+    background: var(--bg-primary);
 }
 
 #content-container:focus {
@@ -162,18 +254,206 @@ button {
     padding: 1rem;
     background: none;
     border: none;
-    color: #ccc;
+    color: var(--text-secondary);
     text-align: left;
     cursor: pointer;
-    border-bottom: 1px solid #3a3a3a;
+    border-bottom: 1px solid var(--border-color);
     transition: background 0.2s;
 }
 
-.nav-buttons {
+.mode-selector-gap {
+    margin-top: var(--spacing-lg); /* Extra gap above mode selector */
+}
+
+.toggle-buttons {
     display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    width: 100%;
+}
+
+.mode-button {
+    flex: 1;
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    border: none;
+    cursor: pointer;
+
+    /* Use same padding as base buttons */
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-md);
+    font-weight: 400;
+    transition: all 0.2s;
+    text-align: center;
+}
+
+.mode-button:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.mode-button.active {
+    background: var(--color-primary);
+    color: var(--text-primary);
+}
+
+.mode-button + .mode-button {
+    border-left: 1px solid var(--border-color);
+}
+
+/* Channel Configuration Modal */
+
+.channel-config-content {
+    padding: var(--spacing-lg);
+}
+
+.channel-config-content h3 {
+    margin-bottom: var(--spacing-lg);
+    color: var(--text-primary);
+}
+
+.channel-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+}
+
+.channel-section h3 {
+    margin: 0 0 1rem;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.channel-separator {
+    border: none;
+    height: 1px;
+    background: var(--border-color);
+    margin: 1rem 0;
+}
+
+.channel-group label {
+    font-size: var(--font-size-md);
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.channel-select {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    min-width: 3rem;
+}
+
+.channel-select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.channel-warning {
+    background: var(--color-danger);
+    color: var(--text-primary);
+    padding: var(--spacing-sm);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+.channel-config-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    justify-content: flex-end;
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--border-color);
+}
+
+/* Part Selector Hotbar */
+.part-selector-hotbar {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-bottom: none;
+    border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+    box-shadow: 0 -2px 8px color-mix(in srgb, #000 calc(var(--alpha-glow) * 100%), transparent);
+    z-index: 1000;
+    padding: var(--spacing-sm) var(--spacing-md);
+}
+
+.hotbar-content {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.hotbar-label {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.part-buttons-container {
+    display: flex;
+    gap: var(--spacing-xs);
+}
+
+.part-button {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    transition: all 0.2s;
+    min-width: 2.5rem;
+    text-align: center;
+}
+
+.part-button:hover {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    border-color: var(--color-primary);
+}
+
+.part-button.active {
+    background: var(--color-primary);
+    color: var(--text-primary);
+    border-color: var(--color-primary);
+}
+
+/* Action Buttons in Header */
+.action-buttons {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    margin-right: 1rem;
+}
+
+/* Mode selector at top of left column */
+.top-mode-selector {
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.mode-selector {
+    display: flex;
+    gap: 0;
 }
 
 /* Sections */
@@ -181,13 +461,23 @@ button {
     margin-bottom: var(--spacing-xl);
     padding: var(--spacing-lg);
     background: var(--bg-secondary);
-    border-radius: var(--border-radius-xl);
+    border-top: solid var(--color-primary);
+}
+
+.names-section {
+    padding: 12px 16px;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--bg-input);
+    margin-bottom: 8px;
+    border-radius: var(--border-radius);
 }
 
 .section h3 {
     margin-bottom: var(--spacing-md);
-    font-weight: 400;
-    color: var(--color-primary);
+    font-weight: 600;
+    font-size: 1em;
+    color: var(--text-primary);
+    text-transform: uppercase;
 }
 
 .subsection {
@@ -322,7 +612,7 @@ button {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgb(0 0 0 / 80%);
+    background: color-mix(in srgb, #000 calc(var(--alpha-overlay) * 100%), transparent);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -330,7 +620,7 @@ button {
 }
 
 .modal-content {
-    background: #2a2a2a;
+    background: var(--bg-secondary);
     border-radius: 8px;
     width: 95vw;
     max-width: 1400px;
@@ -338,7 +628,12 @@ button {
     max-height: 900px;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 4px 20px rgb(0 0 0 / 50%);
+    box-shadow: 0 4px 20px color-mix(in srgb, #000 calc(var(--alpha-modal) * 100%), transparent);
+}
+
+.compact-modal .modal-content {
+    max-width: 450px;
+    height: auto;
 }
 
 .modal-header {
@@ -346,21 +641,21 @@ button {
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
-    border-bottom: 1px solid #444;
-    background: #333;
+    border-bottom: 1px solid var(--bg-input);
+    background: var(--bg-tertiary);
     border-radius: 8px 8px 0 0;
 }
 
 .modal-header h2 {
     margin: 0;
-    color: #f0f0f0;
+    color: var(--text-primary);
     font-size: 1.2rem;
 }
 
 .close-modal {
     background: none;
     border: none;
-    color: #ccc;
+    color: var(--text-secondary);
     font-size: 1.5rem;
     cursor: pointer;
     padding: 0.25rem 0.5rem;
@@ -386,12 +681,12 @@ button {
 }
 
 .notification {
-    background: #333;
-    color: #fff;
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
     padding: 12px 16px;
     border-radius: 6px;
-    border-left: 4px solid #e74c3c;
-    box-shadow: 0 4px 12px rgb(0 0 0 / 30%);
+    border-left: 4px solid var(--color-danger);
+    box-shadow: 0 4px 12px color-mix(in srgb, #000 calc(var(--alpha-glow) * 100%), transparent);
     min-width: 250px;
     max-width: 350px;
     font-size: 0.9rem;
@@ -458,7 +753,7 @@ button {
 .midi-channel-selector select {
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);
-    color: var(--text-color);
+    color: var(--text-primary);
     padding: 0.25rem;
     border-radius: var(--border-radius);
     font-size: 0.9rem;
@@ -481,8 +776,8 @@ button {
     grid-template-columns: auto 1fr 1fr 1fr 1fr;
     gap: 0.5rem;
     align-items: center;
-    background: #1e1e1e;
-    border: 1px solid #3a3a3a;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
     border-radius: 4px;
     padding: 1rem;
     grid-column: span 4;
@@ -490,7 +785,7 @@ button {
 
 .mod-matrix-header,
 .mod-matrix-slot-label {
-    color: #ccc;
+    color: var(--text-secondary);
     padding: 0.5rem;
     text-align: center;
     font-weight: 500;
@@ -499,11 +794,11 @@ button {
 }
 
 .mod-matrix-header {
-    background: #3a3a3a;
+    background: var(--bg-tertiary);
 }
 
 .mod-matrix-slot-label {
-    background: #2a2a2a;
+    background: var(--bg-secondary);
     min-width: 40px;
 }
 
@@ -515,8 +810,8 @@ button {
     right: 0;
     width: 400px;
     max-height: 300px;
-    background: #2a2a2a;
-    border: 1px solid #3a3a3a;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
     border-bottom: none;
     border-right: none;
     z-index: 1000;
@@ -527,8 +822,8 @@ button {
     justify-content: space-between;
     align-items: center;
     padding: 0.5rem 1rem;
-    background: #3a3a3a;
-    border-bottom: 1px solid #4a4a4a;
+    background: var(--bg-tertiary);
+    border-bottom: 1px solid var(--border-color-light);
 }
 
 .midi-monitor-header h3 {
@@ -568,12 +863,12 @@ button {
 }
 
 .midi-timestamp {
-    color: #888;
+    color: var(--text-muted);
     font-size: 0.75rem;
 }
 
 .midi-data {
-    color: #ccc;
+    color: var(--text-secondary);
 }
 
 .midi-direction {
@@ -581,7 +876,7 @@ button {
 }
 
 .midi-raw {
-    color: #999;
+    color: var(--text-muted);
     font-size: 0.7rem;
 }
 
@@ -596,7 +891,7 @@ button {
 
 .midi-tester-panel,
 .midi-monitor-panel {
-    background: #333;
+    background: var(--bg-secondary);
     border-radius: 8px;
     padding: 1rem;
     display: flex;
@@ -613,7 +908,7 @@ button {
 .midi-tester-panel h3,
 .midi-monitor-panel h3 {
     margin: 0 0 1rem;
-    color: #f0f0f0;
+    color: var(--text-primary);
     font-size: 1.1rem;
 }
 
@@ -621,13 +916,14 @@ button {
     display: flex;
     gap: 0.25rem;
     margin-bottom: 1rem;
-    border-bottom: 1px solid #444;
+    border-bottom: 2px solid var(--border-color);
 }
 
 .tester-tab {
-    background: #444;
-    border: none;
-    color: #ccc;
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-bottom: none;
+    color: var(--text-secondary);
     padding: 0.5rem 1rem;
     cursor: pointer;
     border-radius: 4px 4px 0 0;
@@ -651,7 +947,7 @@ button {
 }
 
 .tester-row label {
-    color: #ccc;
+    color: var(--text-secondary);
     font-size: 0.9rem;
     min-width: 80px;
     display: block;
@@ -663,10 +959,10 @@ button {
 .tester-row input[type="range"],
 .tester-row select,
 .tester-row textarea {
-    background: #444;
-    border: 1px solid #555;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
     border-radius: 4px;
-    color: #fff;
+    color: var(--text-primary);
     padding: 0.5rem;
     font-size: 0.9rem;
 }
@@ -681,6 +977,9 @@ button {
 }
 
 .tester-row textarea {
+    background: var(--bg-primary);
+    border: 2px solid var(--border-color);
+    min-height: 120px;
     font-family: monospace;
     resize: vertical;
     flex: 1;
@@ -688,8 +987,17 @@ button {
     box-sizing: border-box;
 }
 
+.tester-row input[type="number"]:focus,
+.tester-row input[type="range"]:focus,
+.tester-row select:focus,
+.tester-row textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary) calc(var(--alpha-focus) * 100%), transparent);
+}
+
 .tester-row small {
-    color: #999;
+    color: var(--text-muted);
     font-size: 0.8rem;
     width: 100%;
 }
@@ -718,7 +1026,7 @@ button {
 }
 
 .monitor-controls button {
-    background: #6c757d;
+    background: var(--color-secondary);
     padding: 0.5rem 1rem;
     font-size: 0.9rem;
 }
@@ -728,7 +1036,7 @@ button {
     align-items: center;
     gap: 0.25rem;
     font-size: 0.8rem;
-    color: #ccc;
+    color: var(--text-secondary);
     cursor: pointer;
 }
 
@@ -738,8 +1046,8 @@ button {
 }
 
 .modal-midi-log {
-    background: #1a1a1a;
-    border: 1px solid #444;
+    background: var(--bg-primary);
+    border: 1px solid var(--bg-input);
     border-radius: 4px;
     padding: 0.5rem;
     flex: 1;
@@ -748,7 +1056,7 @@ button {
     font-family: Consolas, Monaco, monospace;
     font-size: 0.8rem;
     line-height: 1.3;
-    color: #ccc;
+    color: var(--text-secondary);
 }
 
 .midi-log-entry {
@@ -801,14 +1109,14 @@ button:focus-visible {
 
 #receive-baseline.disabled,
 #receive-baseline:disabled {
-    background: #666;
+    background: var(--bg-disabled);
     opacity: 0.6;
     cursor: not-allowed;
 }
 
 #receive-baseline.disabled:hover,
 #receive-baseline:disabled:hover {
-    background: #666;
+    background: var(--bg-disabled);
     transform: none;
 }
 
@@ -825,23 +1133,23 @@ button:focus-visible {
 }
 
 .btn-active-success {
-    background: #27ae60;
-    box-shadow: 0 0 10px rgb(39 174 96 / 30%);
+    background: var(--notification-success-border);
+    box-shadow: 0 0 10px color-mix(in srgb, var(--color-success) calc(var(--alpha-glow) * 100%), transparent);
 }
 
 .btn-active-danger {
-    background: #e74c3c;
-    box-shadow: 0 0 10px rgb(231 76 60 / 30%);
+    background: var(--color-danger);
+    box-shadow: 0 0 10px color-mix(in srgb, var(--color-danger) calc(var(--alpha-glow) * 100%), transparent);
 }
 
 /* Tab States */
 .tab:hover {
-    background: #3a3a3a;
+    background: var(--bg-tertiary);
 }
 
 .tab.active {
-    background: #4a90e2;
-    color: #fff;
+    background: var(--color-primary);
+    color: var(--text-primary);
 }
 
 /* Subsection States */
@@ -863,8 +1171,8 @@ button:focus-visible {
 }
 
 .close-modal:hover {
-    background: #555;
-    color: #fff;
+    background: var(--bg-hover);
+    color: var(--text-primary);
 }
 
 /* Notification States */
@@ -874,57 +1182,57 @@ button:focus-visible {
 }
 
 .notification.success {
-    border-left-color: #27ae60;
+    border-left-color: var(--notification-success-border);
 }
 
 .notification.info {
-    border-left-color: #4a90e2;
+    border-left-color: var(--color-primary);
 }
 
 .notification.warning {
-    border-left-color: #f39c12;
+    border-left-color: var(--color-warning);
 }
 
 .notification.error {
-    border-left-color: #e74c3c;
+    border-left-color: var(--color-danger);
 }
 
 /* Status States */
 .status-message.success {
-    background: rgb(39 174 96 / 10%);
-    border: 1px solid #27ae60;
-    color: #27ae60;
+    background: color-mix(in srgb, var(--color-success) calc(var(--alpha-subtle) * 100%), transparent);
+    border: 1px solid var(--color-success);
+    color: var(--color-success);
 }
 
 .status-message.info {
-    background: rgb(74 144 226 / 10%);
-    border: 1px solid #4a90e2;
-    color: #4a90e2;
+    background: color-mix(in srgb, var(--color-primary) calc(var(--alpha-subtle) * 100%), transparent);
+    border: 1px solid var(--color-primary);
+    color: var(--color-primary);
 }
 
 .status-message.error {
-    background: rgb(231 76 60 / 10%);
-    border: 1px solid #e74c3c;
-    color: #e74c3c;
+    background: color-mix(in srgb, var(--color-danger) calc(var(--alpha-subtle) * 100%), transparent);
+    border: 1px solid var(--color-danger);
+    color: var(--color-danger);
 }
 
 /* MIDI States */
 .midi-message.outgoing {
-    background: rgb(74 144 226 / 10%);
-    border-left: 3px solid #4a90e2;
+    background: color-mix(in srgb, var(--color-primary) calc(var(--alpha-subtle) * 100%), transparent);
+    border-left: 3px solid var(--color-primary);
 }
 
 .midi-message.incoming {
-    background: rgb(81 207 102 / 10%);
-    border-left: 3px solid #51cf66;
+    background: color-mix(in srgb, var(--midi-incoming) calc(var(--alpha-subtle) * 100%), transparent);
+    border-left: 3px solid var(--midi-incoming);
 }
 
 .midi-message.outgoing .midi-direction {
-    color: #4a90e2;
+    color: var(--color-primary);
 }
 
 .midi-message.incoming .midi-direction {
-    color: #51cf66;
+    color: var(--midi-incoming);
 }
 
 /* Tester States */
@@ -933,17 +1241,165 @@ button:focus-visible {
 }
 
 .tester-tab:hover {
-    background: #555;
-    color: #fff;
+    background: var(--bg-hover);
+    color: var(--text-primary);
 }
 
 .tester-tab.active {
-    background: #4a90e2;
-    color: #fff;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border-bottom: 2px solid var(--color-primary);
+    transform: translateY(1px);
 }
 
 .tester-content.active {
     display: block;
+}
+
+/* UI Component Classes */
+
+/* Names Display */
+.name-display {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.name-text {
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 14px;
+}
+
+.name-edit-button {
+    padding: 4px 12px;
+    font-size: 12px;
+}
+
+.multi-name-div {
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.multi-name-text {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 14px;
+}
+
+.part-names-div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-left: 16px;
+}
+
+.part-div {
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+/* Select Arrow Buttons */
+.select-arrow {
+    font-size: 14px;
+    padding: 4px 10px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color-light);
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-radius: var(--border-radius-sm);
+}
+
+.select-arrow:hover {
+    background: var(--bg-hover);
+}
+
+.select-arrow.disabled {
+    opacity: 0.3;
+    cursor: default;
+}
+
+/* Select Display Elements */
+.select-text-display {
+    min-height: 20px;
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.select-container-with-gap {
+    gap: var(--spacing-xs);
+}
+
+.select-container-full-width {
+    width: 100%;
+}
+
+/* Button Rows */
+.button-row-flex {
+    display: flex;
+    justify-content: center;
+    gap: 0.25rem;
+}
+
+.button-active-primary {
+    background: var(--color-button-primary) !important;
+    color: var(--text-primary) !important;
+}
+
+.button-inactive-secondary {
+    background: var(--bg-tertiary) !important;
+    color: var(--text-secondary) !important;
+}
+
+/* Text Controls */
+.text-control-transparent {
+    background: transparent;
+    border: none;
+    text-align: center;
+    padding: 0.5rem;
+}
+
+/* ADSR Display */
+.adsr-container {
+    width: 200px;
+    height: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.adsr-svg {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+}
+
+/* Help Mode */
+.help-active-button {
+    background: var(--color-primary) !important;
+    color: var(--text-primary) !important;
+}
+
+.help-cursor {
+    cursor: help !important;
+}
+
+/* Tooltips */
+.control-tooltip {
+    position: absolute;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color-light);
+    border-radius: var(--border-radius);
+    padding: 8px;
+    color: var(--text-secondary);
+    font-size: 12px;
+    line-height: 1.4;
+    max-width: 300px;
+    z-index: 9999;
+    box-shadow: 0 4px 8px color-mix(in srgb, #000 calc(var(--alpha-glow) * 100%), transparent);
 }
 
 /* Utilities */
@@ -983,7 +1439,7 @@ button:focus-visible {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgb(0 0 0 / 70%);
+    background-color: color-mix(in srgb, #000 calc(var(--alpha-overlay) * 100%), transparent);
     display: flex;
     justify-content: center;
     align-items: center;

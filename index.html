@@ -1,1 +1,383 @@
-<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ArcSynth Editor</title><link rel="icon" type="image/x-icon" href="favicon.ico"><script defer="defer" src="bundle.js"></script><link href="styles.css" rel="stylesheet"></head><body><div id="app"><header class="header"><h1>ArcSynth Editor</h1><div class="header-controls"><button id="help-mode-toggle" class="btn-secondary">?</button> <button id="load-config-header" class="btn-secondary">Load Configuration</button> <button id="export-patch" class="btn-secondary">Export Patch</button> <button id="import-patch" class="btn-secondary">Import Patch</button><div class="midi-status"><span id="midi-status">MIDI: Disconnected</span> <button id="connect-midi">Connect</button><div class="midi-channel-selector"><label for="midi-channel">Ch:</label> <select id="midi-channel"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option></select></div></div></div></header><div class="main-content"><nav class="tab-nav"><div id="tab-container"></div><div class="nav-buttons"><button id="get-patch" class="btn-success" style="display: none;">Get Patch</button> <button id="reset-all-defaults" class="btn-primary" style="display: none;">Initialize</button> <button id="send-all-parameters" class="btn-secondary" style="display: none;">Send All</button></div></nav><main class="editor-area" id="editor-area"><div id="content-container" tabindex="-1"><div id="welcome" class="welcome"><h2>Welcome to ArcSynth Editor</h2><p>Load a synthesizer configuration to begin editing parameters.</p><div class="welcome-actions"><button id="load-config" class="btn-large">Load Configuration</button></div></div></div></main><div class="midi-monitor"><div class="midi-monitor-header"><h3>MIDI Monitor</h3><div class="midi-monitor-controls"><button id="toggle-monitor" class="btn-success">Show</button> <button id="expand-monitor">Expand</button> <button id="clear-monitor" class="btn-secondary">Clear</button></div></div><div id="midi-monitor-content" class="midi-monitor-content hidden"><div id="midi-log"></div></div></div></div></div><div id="midi-tester-modal" class="modal hidden"><div class="modal-content"><div class="modal-header"><h2>MIDI Tester & Monitor</h2><button id="close-midi-tester" class="close-modal">&times;</button></div><div class="modal-body"><div class="midi-tester-container"><div class="midi-tester-panel"><h3>MIDI Tester</h3><div class="tester-tabs"><button class="tester-tab active" data-tab="cc">CC</button> <button class="tester-tab" data-tab="cc-pair">CC Pair</button> <button class="tester-tab" data-tab="nrpn">NRPN</button> <button class="tester-tab" data-tab="sysex">SysEx</button> <button class="tester-tab" data-tab="program">Program Change</button> <button class="tester-tab" data-tab="dump-receiver">Dump Receiver</button></div><div id="cc-tester" class="tester-content active"><div class="tester-row"><label>CC Number:</label> <input type="number" id="cc-number" min="0" max="127" value="1"></div><div class="tester-row"><label>Value:</label> <input type="number" id="cc-value" min="0" max="127" value="64"> <input type="range" id="cc-value-slider" min="0" max="127" value="64"></div><div class="tester-row"><label>Channel:</label> <input type="number" id="cc-channel" min="1" max="16" value="1"></div><button id="send-cc" class="btn-margin-top">Send CC</button></div><div id="cc-pair-tester" class="tester-content"><div class="tester-row"><label>MSB CC:</label> <input type="number" id="cc-pair-msb" min="0" max="127" value="16"></div><div class="tester-row"><label>LSB CC:</label> <input type="number" id="cc-pair-lsb" min="0" max="127" value="48"></div><div class="tester-row"><label>Value (0-255):</label> <input type="number" id="cc-pair-value" min="0" max="255" value="128"> <input type="range" id="cc-pair-value-slider" min="0" max="255" value="128"></div><div class="tester-row"><label>Channel:</label> <input type="number" id="cc-pair-channel" min="1" max="16" value="1"></div><button id="send-cc-pair" class="btn-margin-top">Send CC Pair</button></div><div id="nrpn-tester" class="tester-content"><div class="tester-row"><label>NRPN MSB:</label> <input type="number" id="nrpn-msb" min="0" max="127" value="0"></div><div class="tester-row"><label>NRPN LSB:</label> <input type="number" id="nrpn-lsb" min="0" max="127" value="1"></div><div class="tester-row"><label>Value MSB:</label> <input type="number" id="nrpn-value-msb" min="0" max="127" value="64"> <input type="range" id="nrpn-value-msb-slider" min="0" max="127" value="64"></div><div class="tester-row"><label>Value LSB:</label> <input type="number" id="nrpn-value-lsb" min="0" max="127" value="0"> <input type="range" id="nrpn-value-lsb-slider" min="0" max="127" value="0"></div><div class="tester-row"><label>Channel:</label> <input type="number" id="nrpn-channel" min="1" max="16" value="1"></div><div class="tester-row"><label class="checkbox-label"><input type="checkbox" id="nrpn-exclude-lsb"> Send Data Entry MSB only</label></div><button id="send-nrpn" class="btn-margin-top">Send NRPN</button></div><div id="sysex-tester" class="tester-content"><div class="tester-row sysex-row"><label>SysEx Data (hex):</label> <textarea id="sysex-data" placeholder="F0 7E 00 09 01 F7" rows="8"></textarea> <small>Enter hex bytes separated by spaces. F0 and F7 are automatically added if not present.</small></div><button id="send-sysex" class="btn-margin-top">Send SysEx</button></div><div id="program-tester" class="tester-content"><div class="tester-row"><label>Program Number:</label> <input type="number" id="program-number" min="0" max="127" value="0"> <input type="range" id="program-number-slider" min="0" max="127" value="0"></div><div class="tester-row"><label>Bank MSB (CC 0):</label> <input type="number" id="bank-msb" min="0" max="127" value="0"> <label class="checkbox-label"><input type="checkbox" id="send-bank-msb" checked="checked"> Send Bank MSB</label></div><div class="tester-row"><label>Bank LSB (CC 32):</label> <input type="number" id="bank-lsb" min="0" max="127" value="0"> <label class="checkbox-label"><input type="checkbox" id="send-bank-lsb" checked="checked"> Send Bank LSB</label></div><div class="tester-row"><label>Channel:</label> <input type="number" id="program-channel" min="1" max="16" value="1"></div><div class="tester-row"><label class="checkbox-label"><input type="checkbox" id="program-auto-sequence" checked="checked"> Auto-sequence (Bank → Program)</label></div><div class="program-buttons"><button id="send-program-only" class="btn-margin-top btn-secondary">Program Only</button> <button id="send-bank-only" class="btn-margin-top btn-secondary">Bank Only</button> <button id="send-program-change" class="btn-margin-top">Send All</button></div></div><div id="dump-receiver-tester" class="tester-content"><div class="tester-row"><h4>Receive Synth Dumps</h4><p>Load parameter values from synthesizer dumps using SysEx mapping data.</p></div><div class="tester-row"><div id="dump-mapping-status" class="status-message info">Checking for SysEx mapping data...</div></div><div class="tester-row sysex-row"><label>Received Dump Data:</label> <textarea id="received-dump" placeholder="Dump data will appear here when received..." rows="8" readonly="readonly"></textarea></div><div class="tester-row"><button id="get-dump" class="btn-margin-top btn-success">Get Dump</button> <button id="start-dump-receiver" class="btn-margin-top">Start Receiving Dumps</button> <button id="stop-dump-receiver" class="btn-margin-top btn-secondary" style="display: none;">Stop Receiving</button> <button id="apply-dump-values" class="btn-margin-top btn-secondary" disabled="disabled">Apply Values to Synth</button></div><div class="tester-row"><div id="dump-conversion-status" class="status-message"></div></div><div class="tester-row" id="converted-params" style="display: none;"><h5>Converted Parameters:</h5><div id="param-list" style="max-height: 200px; overflow-y: auto; background: #1a1a1a; padding: 1rem; border-radius: 4px; font-family: monospace; font-size: 0.9rem;"></div></div></div></div><div class="midi-monitor-panel"><div class="monitor-header"><h3>MIDI Monitor</h3><div class="monitor-controls"><button id="modal-clear-monitor" class="btn-secondary">Clear</button></div></div><div id="modal-midi-log" class="modal-midi-log"></div></div></div></div></div></div><div id="notification-container" class="notification-container"></div></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArcSynth Editor</title>
+    <!-- For Electron: always load CSS, for web: webpack handles it -->
+    <script>
+        if (window.location.protocol === 'file:') {
+            document.write('<link rel="stylesheet" href="src/styles.css">');
+        }
+    </script>
+    <!-- Favicon - only show in Electron, webpack copies it for web -->
+    <script>
+        if (window.location.protocol === 'file:') {
+            document.write('<link rel="icon" type="image/x-icon" href="icons/favicon.ico">');
+        }
+    </script>
+<script defer src="bundle.js"></script><link href="styles.css" rel="stylesheet"></head>
+<body>
+    <div id="app">
+        <header class="header">
+            <h1>ArcSynth Editor</h1>
+            <div class="header-controls">
+                <!-- Action Buttons in Header -->
+                <div class="action-buttons">
+                    <button id="get-patch" class="action-btn btn-success" style="display: none;" title="Get patch from synthesizer">
+                        <span class="action-icon">⬇</span>
+                        <span class="action-label">Get</span>
+                    </button>
+                    <button id="reset-all-defaults" class="action-btn btn-primary" style="display: none;" title="Reset all parameters to defaults">
+                        <span class="action-icon">↻</span>
+                        <span class="action-label">Initialize</span>
+                    </button>
+                    <button id="send-all-parameters" class="action-btn btn-secondary" style="display: none;" title="Send all parameters to synthesizer">
+                        <span class="action-icon">⬆</span>
+                        <span class="action-label">Send All</span>
+                    </button>
+                </div>
+                
+                <button id="help-mode-toggle" class="btn-secondary">?</button>
+                <div class="menu-container">
+                    <button id="menu-button" class="btn-secondary">Menu ▼</button>
+                    <div id="menu-dropdown" class="menu-dropdown hidden">
+                        <button id="connect-midi" class="menu-item">Select MIDI Devices</button>
+                        <div class="menu-separator"></div>
+                        <button id="load-config-header" class="menu-item">Load Configuration</button>
+                        <div class="menu-separator"></div>
+                        <button id="import-patch" class="menu-item">Import Patch</button>
+                        <button id="export-patch" class="menu-item">Export Patch</button>
+                        <div class="menu-separator"></div>
+                        <button id="configure-channels" class="menu-item">Configure Channels</button>
+                    </div>
+                </div>
+                <div class="midi-status">
+                    <span id="midi-status" class="midi-status-text">MIDI: Disconnected</span>
+                </div>
+            </div>
+        </header>
+        
+        <div class="main-content">
+            <nav class="tab-nav">
+                <!-- Mode selector at top of sidebar -->
+                <div class="top-mode-selector">
+                    <div id="mode-selector" class="mode-selector toggle-buttons" style="display: none;">
+                        <button id="single-mode" class="mode-button active">Single</button>
+                        <button id="multi-mode" class="mode-button">Multi</button>
+                    </div>
+                </div>
+                <div id="tab-container"></div>
+            </nav>
+            
+            <main class="editor-area" id="editor-area">
+                <div id="content-container" tabindex="-1">
+                    <div id="welcome" class="welcome">
+                        <h2>Welcome to ArcSynth Editor</h2>
+                        <p>Load a synthesizer configuration to begin editing parameters.</p>
+                        <div class="welcome-actions">
+                            <button id="load-config" class="btn-large">Load Configuration</button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            
+            <div class="midi-monitor">
+                <div class="midi-monitor-header">
+                    <h3>MIDI Monitor</h3>
+                    <div class="midi-monitor-controls">
+                        <button id="toggle-monitor" class="btn-success">Show</button>
+                        <button id="expand-monitor">Expand</button>
+                        <button id="clear-monitor" class="btn-secondary">Clear</button>
+                    </div>
+                </div>
+                <div id="midi-monitor-content" class="midi-monitor-content hidden">
+                    <div id="midi-log"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MIDI Tester Modal -->
+    <div id="midi-tester-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>MIDI Tester & Monitor</h2>
+                <button id="close-midi-tester" class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="midi-tester-container">
+                    <div class="midi-tester-panel">
+                        <h3>MIDI Tester</h3>
+                        <div class="tester-tabs">
+                            <button class="tester-tab active" data-tab="cc">CC</button>
+                            <button class="tester-tab" data-tab="cc-pair">CC Pair</button>
+                            <button class="tester-tab" data-tab="nrpn">NRPN</button>
+                            <button class="tester-tab" data-tab="sysex">SysEx</button>
+                            <button class="tester-tab" data-tab="program">Program Change</button>
+                            <button class="tester-tab" data-tab="dump-receiver">Dump Receiver</button>
+                        </div>
+                        
+                        <!-- CC Tester -->
+                        <div id="cc-tester" class="tester-content active">
+                            <div class="tester-row">
+                                <label>CC Number:</label>
+                                <input type="number" id="cc-number" min="0" max="127" value="1">
+                            </div>
+                            <div class="tester-row">
+                                <label>Value:</label>
+                                <input type="number" id="cc-value" min="0" max="127" value="64">
+                                <input type="range" id="cc-value-slider" min="0" max="127" value="64">
+                            </div>
+                            <div class="tester-row">
+                                <label>Channel:</label>
+                                <input type="number" id="cc-channel" min="1" max="16" value="1">
+                            </div>
+                            <button id="send-cc" class="btn-margin-top">Send CC</button>
+                        </div>
+                        
+                        <!-- CC Pair Tester -->
+                        <div id="cc-pair-tester" class="tester-content">
+                            <div class="tester-row">
+                                <label>MSB CC:</label>
+                                <input type="number" id="cc-pair-msb" min="0" max="127" value="16">
+                            </div>
+                            <div class="tester-row">
+                                <label>LSB CC:</label>
+                                <input type="number" id="cc-pair-lsb" min="0" max="127" value="48">
+                            </div>
+                            <div class="tester-row">
+                                <label>Value (0-255):</label>
+                                <input type="number" id="cc-pair-value" min="0" max="255" value="128">
+                                <input type="range" id="cc-pair-value-slider" min="0" max="255" value="128">
+                            </div>
+                            <div class="tester-row">
+                                <label>Channel:</label>
+                                <input type="number" id="cc-pair-channel" min="1" max="16" value="1">
+                            </div>
+                            <button id="send-cc-pair" class="btn-margin-top">Send CC Pair</button>
+                        </div>
+                        
+                        <!-- NRPN Tester -->
+                        <div id="nrpn-tester" class="tester-content">
+                            <div class="tester-row">
+                                <label>NRPN MSB:</label>
+                                <input type="number" id="nrpn-msb" min="0" max="127" value="0">
+                            </div>
+                            <div class="tester-row">
+                                <label>NRPN LSB:</label>
+                                <input type="number" id="nrpn-lsb" min="0" max="127" value="1">
+                            </div>
+                            <div class="tester-row">
+                                <label>Value MSB:</label>
+                                <input type="number" id="nrpn-value-msb" min="0" max="127" value="64">
+                                <input type="range" id="nrpn-value-msb-slider" min="0" max="127" value="64">
+                            </div>
+                            <div class="tester-row">
+                                <label>Value LSB:</label>
+                                <input type="number" id="nrpn-value-lsb" min="0" max="127" value="0">
+                                <input type="range" id="nrpn-value-lsb-slider" min="0" max="127" value="0">
+                            </div>
+                            <div class="tester-row">
+                                <label>Channel:</label>
+                                <input type="number" id="nrpn-channel" min="1" max="16" value="1">
+                            </div>
+                            <div class="tester-row">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="nrpn-exclude-lsb">
+                                    Send Data Entry MSB only
+                                </label>
+                            </div>
+                            <button id="send-nrpn" class="btn-margin-top">Send NRPN</button>
+                        </div>
+                        
+                        <!-- SysEx Tester -->
+                        <div id="sysex-tester" class="tester-content">
+                            <div class="tester-row sysex-row">
+                                <label>SysEx Data (hex):</label>
+                                <textarea id="sysex-data" placeholder="F0 7E 00 09 01 F7" rows="8"></textarea>
+                                <small>Enter hex bytes separated by spaces. F0 and F7 are automatically added if not present.</small>
+                            </div>
+                            <button id="send-sysex" class="btn-margin-top">Send SysEx</button>
+                        </div>
+                        
+                        <!-- Program Change Tester -->
+                        <div id="program-tester" class="tester-content">
+                            <div class="tester-row">
+                                <label>Program Number:</label>
+                                <input type="number" id="program-number" min="0" max="127" value="0">
+                                <input type="range" id="program-number-slider" min="0" max="127" value="0">
+                            </div>
+                            <div class="tester-row">
+                                <label>Bank MSB (CC 0):</label>
+                                <input type="number" id="bank-msb" min="0" max="127" value="0">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="send-bank-msb" checked>
+                                    Send Bank MSB
+                                </label>
+                            </div>
+                            <div class="tester-row">
+                                <label>Bank LSB (CC 32):</label>
+                                <input type="number" id="bank-lsb" min="0" max="127" value="0">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="send-bank-lsb" checked>
+                                    Send Bank LSB
+                                </label>
+                            </div>
+                            <div class="tester-row">
+                                <label>Channel:</label>
+                                <input type="number" id="program-channel" min="1" max="16" value="1">
+                            </div>
+                            <div class="tester-row">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="program-auto-sequence" checked>
+                                    Auto-sequence (Bank → Program)
+                                </label>
+                            </div>
+                            <div class="program-buttons">
+                                <button id="send-program-only" class="btn-margin-top btn-secondary">Program Only</button>
+                                <button id="send-bank-only" class="btn-margin-top btn-secondary">Bank Only</button>
+                                <button id="send-program-change" class="btn-margin-top">Send All</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Dump Receiver -->
+                        <div id="dump-receiver-tester" class="tester-content">
+                            <div class="tester-row">
+                                <h4>Receive Synth Dumps</h4>
+                                <p>Load parameter values from synthesizer dumps using SysEx mapping data.</p>
+                            </div>
+                            <div class="tester-row">
+                                <div id="dump-mapping-status" class="status-message info">
+                                    Checking for SysEx mapping data...
+                                </div>
+                            </div>
+                            <div class="tester-row sysex-row">
+                                <label>Received Dump Data:</label>
+                                <textarea id="received-dump" placeholder="Dump data will appear here when received..." rows="8" readonly></textarea>
+                            </div>
+                            <div class="tester-row">
+                                <button id="get-dump" class="btn-margin-top btn-success">Get Dump</button>
+                                <button id="start-dump-receiver" class="btn-margin-top">Start Receiving Dumps</button>
+                                <button id="stop-dump-receiver" class="btn-margin-top btn-secondary" style="display: none;">Stop Receiving</button>
+                                <button id="apply-dump-values" class="btn-margin-top btn-secondary" disabled>Apply Values to Synth</button>
+                            </div>
+                            <div class="tester-row">
+                                <div id="dump-conversion-status" class="status-message"></div>
+                            </div>
+                            <div class="tester-row" id="converted-params" style="display: none;">
+                                <h5>Converted Parameters:</h5>
+                                <div id="param-list" style="max-height: 200px; overflow-y: auto; background: #1a1a1a; padding: 1rem; border-radius: 4px; font-family: monospace; font-size: 0.9rem;"></div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    <div class="midi-monitor-panel">
+                        <div class="monitor-header">
+                            <h3>MIDI Monitor</h3>
+                            <div class="monitor-controls">
+                                <button id="modal-clear-monitor" class="btn-secondary">Clear</button>
+                            </div>
+                        </div>
+                        <div id="modal-midi-log" class="modal-midi-log"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Channel Configuration Modal -->
+    <div id="channel-config-modal" class="modal compact-modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="channel-modal-title">Configure MIDI Channels</h2>
+                <button id="close-channel-config" class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="channel-config-content">
+                    <div id="channel-warning" class="channel-warning" style="display: none;">
+                        Warning: Both parts are using the same MIDI channel
+                    </div>
+                    
+                    <!-- Single Mode Channel Config -->
+                    <div class="channel-section">
+                        <h3>Single Mode</h3>
+                        <div id="single-channel-config" class="channel-group">
+                            <label for="single-channel">MIDI Channel:</label>
+                            <select id="single-channel" class="channel-select">
+                                <option value="1" selected>1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14">14</option>
+                                <option value="15">15</option>
+                                <option value="16">16</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <hr class="channel-separator">
+                    
+                    <!-- Multi Mode Channel Config -->
+                    <div class="channel-section">
+                        <h3>Multi Mode</h3>
+                        <div id="multi-channel-config">
+                            <!-- Dynamic part channel selectors will be generated here -->
+                        </div>
+                    </div>
+                    
+                    <div class="channel-config-actions">
+                        <button id="cancel-channel-config" class="btn-secondary">Cancel</button>
+                        <button id="save-channel-config" class="btn-success">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Part Selector Hotbar (Multi Mode) -->
+    <div id="part-selector-hotbar" class="part-selector-hotbar" style="display: none;">
+        <div class="hotbar-content">
+            <span class="hotbar-label">Part:</span>
+            <div id="part-buttons-container" class="part-buttons-container"></div>
+        </div>
+    </div>
+
+    <!-- Notification System -->
+    <div id="notification-container" class="notification-container"></div>
+
+    <!-- Scripts for Electron (webpack handles bundling for web) -->
+    <script>
+        // Only load individual scripts for Electron (file:// protocol)
+        if (window.location.protocol === 'file:') {
+            document.write(`
+                <script type="module">
+                    import AppConfig from './src/config.js';
+                    import logger from './src/logger.js';
+                    
+                    window.AppConfig = AppConfig;
+                    window.logger = logger;
+                    window.logError = (message) => logger.error(message);
+                    window.logWarn = (message) => logger.warn(message);
+                    window.logInfo = (message) => logger.info(message);
+                    window.logDebug = (message) => logger.debug(message);
+                <\/script>
+                
+                <script src="src/midi.js"><\/script>
+                <script src="src/ui.js"><\/script>
+                <script type="module" src="src/app.js"><\/script>
+            `);
+        }
+    </script>
+</body>
+</html>
