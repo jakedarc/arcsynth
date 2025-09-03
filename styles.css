@@ -1076,10 +1076,6 @@ button {
     font-weight: 500;
 }
 
-/* States & Modifiers */
-
-/* Button States */
-
 /* Button States */
 button:hover {
     background: var(--color-primary-hover);

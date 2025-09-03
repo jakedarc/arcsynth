@@ -115,7 +115,6 @@
                             <button class="tester-tab" data-tab="nrpn">NRPN</button>
                             <button class="tester-tab" data-tab="sysex">SysEx</button>
                             <button class="tester-tab" data-tab="program">Program Change</button>
-                            <button class="tester-tab" data-tab="dump-receiver">Dump Receiver</button>
                         </div>
                         
                         <!-- CC Tester -->
@@ -241,35 +240,6 @@
                             </div>
                         </div>
                         
-                        <!-- Dump Receiver -->
-                        <div id="dump-receiver-tester" class="tester-content">
-                            <div class="tester-row">
-                                <h4>Receive Synth Dumps</h4>
-                                <p>Load parameter values from synthesizer dumps using SysEx mapping data.</p>
-                            </div>
-                            <div class="tester-row">
-                                <div id="dump-mapping-status" class="status-message info">
-                                    Checking for SysEx mapping data...
-                                </div>
-                            </div>
-                            <div class="tester-row sysex-row">
-                                <label>Received Dump Data:</label>
-                                <textarea id="received-dump" placeholder="Dump data will appear here when received..." rows="8" readonly></textarea>
-                            </div>
-                            <div class="tester-row">
-                                <button id="get-dump" class="btn-margin-top btn-success">Get Dump</button>
-                                <button id="start-dump-receiver" class="btn-margin-top">Start Receiving Dumps</button>
-                                <button id="stop-dump-receiver" class="btn-margin-top btn-secondary" style="display: none;">Stop Receiving</button>
-                                <button id="apply-dump-values" class="btn-margin-top btn-secondary" disabled>Apply Values to Synth</button>
-                            </div>
-                            <div class="tester-row">
-                                <div id="dump-conversion-status" class="status-message"></div>
-                            </div>
-                            <div class="tester-row" id="converted-params" style="display: none;">
-                                <h5>Converted Parameters:</h5>
-                                <div id="param-list" style="max-height: 200px; overflow-y: auto; background: #1a1a1a; padding: 1rem; border-radius: 4px; font-family: monospace; font-size: 0.9rem;"></div>
-                            </div>
-                        </div>
                         
                     </div>
                     
